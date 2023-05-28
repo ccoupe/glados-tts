@@ -1,0 +1,4 @@
+flask
+phonemizer
+unidecode
+inflect
