@@ -8,4 +8,4 @@ apt-get -y install espeak && \
 mkdir -p workspace/glados-tts/audio && \
 pip install -r requirements.txt
 
-CMD ["/workspace/glados-tts/run/sh"]
+CMD ["/workspace/glados-tts/run.sh"]
