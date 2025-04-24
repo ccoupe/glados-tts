@@ -19,6 +19,6 @@ To build the image:
 
 To start the image:
 
-`$ docker run --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 -p8124:8124  -it --rm -d --name=glados-tts ccoupe/glados:1.0`
+`$ docker run --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 -p8124:8124  -it  -d --restart unless-stopped --name=glados-tts ccoupe/glados:1.0` 
 
 
