@@ -28,7 +28,7 @@ for i in range(4):
     init_mel = init['mel_post'].to(device)
     init_vo = vocoder(init_mel)
 
-while(1):
+while (1):
     text = input("Input: ")
 
     # Tokenize, clean and phonemize input text

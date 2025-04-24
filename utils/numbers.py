@@ -63,6 +63,7 @@ def _expand_euros(m):
   else:
     return 'zero euros'
 
+
 def _expand_ordinal(m):
   return _inflect.number_to_words(m.group(0))
 
@@ -77,7 +78,8 @@ def _expand_number(m):
     elif num % 100 == 0:
       return _inflect.number_to_words(num // 100) + ' hundred'
     else:
-      return _inflect.number_to_words(num, andword='', zero='oh', group=2).replace(', ', ' ')
+      return _inflect.number_to_words(num, andword='', zero='oh',
+                                      group=2).replace(', ', ' ')
   else:
     return _inflect.number_to_words(num, andword='')
 
