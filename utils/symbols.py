@@ -22,8 +22,7 @@ _diacrilics = 'ɚ˞ɫ'
 _extra_phons = ['g', 'ɝ', '̃', '̍', '̥', '̩', '̯', '͡']
 
 phonemes = list(
-  _pad + _punctuation + _special + _vowels + _non_pulmonic_consonants +
-  _pulmonic_consonants + _suprasegmentals + _other_symbols + _diacrilics +
-  _extra_phons)
+  _pad + _punctuation + _special + _vowels + _non_pulmonic_consonants
+  +_pulmonic_consonants + _suprasegmentals + _other_symbols + _diacrilics) + _extra_phons
 
 phonemes_set = set(phonemes)

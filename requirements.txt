@@ -3,3 +3,5 @@ pathvalidate
 phonemizer
 unidecode
 inflect
+scipy
+torch

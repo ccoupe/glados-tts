@@ -9,7 +9,7 @@ For developing, use the smallest build image build possible.
 
 To run the glados-tts server in development, You must specify the -v mount options. 
 
-`$ docker run --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 -p8124:8124 -v ${HOME}/Projects/glados-tts:/workspace/glados-tts -it --rm ccoupe/glados:1.0`
+`$ docker run --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 -p8132:8132 -v ${HOME}/Projects/glados-tts:/workspace/glados-tts -it --rm ccoupe/glados:1.0`
 
 ### Production (so to speak)
 
@@ -19,6 +19,6 @@ To build the image:
 
 To start the image:
 
-`$ docker run --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 -p8124:8124  -it  -d --restart unless-stopped --name=glados-tts ccoupe/glados:1.0` 
+`$ docker run --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 -p8132:8132  -it  -d --restart unless-stopped --name=glados-tts ccoupe/glados:1.0` 
 
 

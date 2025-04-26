@@ -54,11 +54,8 @@ def glados_tts(text, key=False):
     audio = audio.squeeze()
     audio = audio * 32768.0
     audio = audio.cpu().numpy().astype('int16')
-    if (key):
-      output_file = ('audio/GLaDOS-tts-temp-output-' + key + '.wav')
-    else:
-      output_file = ('audio/GLaDOS-tts-temp-output.wav')
-  
+    output_file = mk_tmpfn(key)
+
     # Write audio file to disk
     # 22,05 kHz sample rate
     write(output_file, 22050, audio)
@@ -66,11 +63,20 @@ def glados_tts(text, key=False):
   return True
 
 
+# There is just one way to name the tempfile: via this function
+def mk_tmpfn(key):
+  if (key):
+    of = (os.getcwd() + '/audio/glados-tts-temp-output-' + key + '.wav')
+  else:
+    of= (os.getcwd() + '/audio/glados-tts-temp-output.wav')
+  return of
+  
+  
 # If the script is run directly, assume remote engine
 if __name__ == "__main__":
   
-  # Remote Engine Veritables
-  PORT = 8124
+  # Remote Engine Variables
+  PORT = 8132
   CACHE = True
   
   from flask import Flask, request, send_file, abort
@@ -81,52 +87,45 @@ if __name__ == "__main__":
   
   app = Flask(__name__)
   
-  @app.route('/synthesize/', defaults={'text': ''}, methods=['GET', 'POST'])
-  @app.route('/synthesize/<path:text>')
-  def synthesize(text):
+  @app.route('/v1/audio/speech', methods=['GET', 'POST'])
+  def speech():
     if request.method == 'POST':
-      textf = request.files['file']
-      if textf is None:
-        abort(400, message='No File')
-      textf.save("audio/text-in.txt")
-      with open("audio/text-in.txt", "r") as file:
-        line = file.read()
-      if len(line) < 1:
-        abort(400, message='Empty File')
+      dt = request.get_json(force=True)
+      line = dt['input']
+      model = dt['model']
+      voice = dt['voice']
     else:
-      if (text == ''):
-        return 'No input'
-      line = urllib.parse.unquote(request.url[request.url.find('synthesize/') + 11:])
-    '''
+      abort(400, message='Only POST')
+    
     filename = "GLaDOS-tts-" + line.replace(" ", "-")
     filename = filename.replace("!", "")
     filename = filename.replace("°c", "degrees celcius")
     filename = filename.replace(",", "") + ".wav"
-    '''
-    filename = pathvalidate.sanitize_filepath("GLaDOS-tts-" + line)
-    file = os.getcwd() + '/audio/' + filename
+    filename = pathvalidate.sanitize_filepath("glados-tts-" + line)
+    tfile = os.getcwd() + '/audio/' + filename
     
     # Check for Local Cache
-    if (os.path.isfile(file)):
+    if (os.path.isfile(tfile)):
       
       # Update access time. This will allow for routine cleanups
-      os.utime(file, None)
+      os.utime(tfile, None)
       print("\033[1;94mINFO:\033[;97m The audio sample sent from cache.")
-      return send_file(file)
+      return send_file(tfile)
       
     # Generate New Sample
     key = str(time.time())[7:]
     if (glados_tts(line, key)):
-      tempfile = os.getcwd() + '/audio/GLaDOS-tts-temp-output-' + key + '.wav'
+      # tempfile = os.getcwd() + '/audio/glados-tts-temp-output-' + key + '.wav'
+      tempfile = mk_tmpfn(key)
             
       # If the line isn't too long, store in cache
       if (len(line) < 200 and CACHE):
-        shutil.move(tempfile, file)
+        shutil.move(tempfile, tfile)
       else:
         return send_file(tempfile)
         os.remove(tempfile)
         
-      return send_file(file)
+      return send_file(tfile)
         
     else:
       return 'TTS Engine Failed'
